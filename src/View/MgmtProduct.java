@@ -4,14 +4,20 @@
  * and open the template in the editor.
  */
 package View;
-
+import Model.History;
 import Controller.SQLite;
 import Model.Product;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import sun.applet.Main;
 
 /**
  *
@@ -19,8 +25,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MgmtProduct extends javax.swing.JPanel {
 
+    private Timestamp timestamp;
+    public History history;
+    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    String driverURL = "jdbc:sqlite:" + "database.db";
     
     public MgmtProduct(SQLite sqlite) {
         initComponents();
@@ -186,6 +196,7 @@ public class MgmtProduct extends javax.swing.JPanel {
 
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(stockFld.getText());
+//                sqlite.addHistory( ,tableModel.getValueAt(table.getSelectedRow(), 0), Integer.parseInt(stockFld.getText())), );
             }
         }
     }//GEN-LAST:event_purchaseBtnActionPerformed
@@ -209,6 +220,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             System.out.println(nameFld.getText());
             System.out.println(stockFld.getText());
             System.out.println(priceFld.getText());
+            sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
+            init();
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
@@ -232,6 +245,17 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(nameFld.getText());
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
+                
+                String sql = "UPDATE product SET name = '" + nameFld.getText() +
+                        "', stock = " + Integer.parseInt(stockFld.getText()) + 
+                                ", price = " + Float.parseFloat(priceFld.getText()) + 
+                                " WHERE name='" + tableModel.getValueAt(table.getSelectedRow(), 0) + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
+                System.out.println(result);
+                init();
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed
@@ -242,6 +266,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.removeProduct((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+                init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed

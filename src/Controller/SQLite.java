@@ -281,4 +281,15 @@ public class SQLite {
         } catch (Exception ex) {}
         return product;
     }
+
+
+    public void removeProduct(String name) {
+        String sql = "DELETE FROM product WHERE name='" + name + "';";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Product " + name + " has been deleted.");
+        } catch (Exception ex) {}
+    }
 }

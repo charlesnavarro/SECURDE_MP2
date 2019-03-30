@@ -123,6 +123,7 @@ public class Login extends javax.swing.JPanel {
             if (username.equals(users.get(nCtr).getUsername())) { //CHECKS USERNAME
                 jLabel3.setText("");
                 if (BCrypt.checkpw(password, users.get(nCtr).getPassword())) { // PASSWORD HASHED AND ORIG PASSWORD
+                    if(users.get(nCtr).getLocked() != 1){
 //                    System.out.println(password);
 //                    System.out.println(generatedSecuredPasswordHash);
                     loggedIn = true;
@@ -131,7 +132,13 @@ public class Login extends javax.swing.JPanel {
                     frame.mainNav();
                     nCtr = users.size() + 1;
                     attempts = 0;
-                } else {
+                    }
+                    else if(users.get(nCtr).getLocked() == 1){
+                        nCtr = users.size() +1;
+                        jLabel3.setText("Login failed: You have been locked out of your account");
+                    }
+                }
+                else {
                     jLabel3.setText("Login failed: Invalid username or password");
                     nCtr = users.size() + 1;
                         attempts++;

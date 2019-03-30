@@ -7,7 +7,16 @@ package View;
 
 import Controller.SQLite;
 import Model.User;
+import static java.lang.Character.isUpperCase;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -22,8 +31,42 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MgmtUser extends javax.swing.JPanel {
 
+    public boolean Password_Validation(String s) {
+        
+         if (s == null || s.trim().isEmpty()) {
+             System.out.println("Incorrect format of string");
+             return false;
+         }
+         Pattern p = Pattern.compile("[^A-Za-z0-9]"); //symbols
+         Matcher m = p.matcher(s);
+         boolean symbols = m.find();      
+         
+         Pattern p1 = Pattern.compile("[0-9]"); //numbers
+         Matcher m1 = p1.matcher(s);
+         boolean numbers = m1.find();
+         
+         Pattern p2 = Pattern.compile("[a-z]"); //lowercase
+         Matcher m2 = p2.matcher(s);
+         boolean lower = m2.find();
+         
+         Pattern p3 = Pattern.compile("[A-Z]"); //uppercase
+         Matcher m3 = p3.matcher(s);
+         boolean upper = m3.find();
+         
+         if (symbols && numbers && lower && upper && s.length()>= 8){
+            System.out.println("There is a special character, number, lowercase and uppercase in my string & 8 characters long");
+            System.out.println(s);
+            return true;
+         }
+         else{
+            System.out.println("Invalid password");
+            return false;
+         }
+    }
+    
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    String driverURL = "jdbc:sqlite:" + "database.db";
     
     public MgmtUser(SQLite sqlite) {
         initComponents();
@@ -191,6 +234,13 @@ public class MgmtUser extends javax.swing.JPanel {
             if(result != null){
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
+                String sql = "UPDATE users SET role = " + result.charAt(0) + " WHERE username='" + tableModel.getValueAt(table.getSelectedRow(), 0) + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
+                init();
+            
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
@@ -201,21 +251,37 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.removeUser((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+                init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
+        int i = 0;
         if(table.getSelectedRow() >= 0){
             String state = "lock";
             if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
                 state = "unlock";
+            }
+            if(state.equals("unlock")){
+                i = 0;
+            }
+            else if(state.equals("lock")){
+                i = 1;
             }
             
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                String sql = "UPDATE users SET locked = " + i + " WHERE username='" + tableModel.getValueAt(table.getSelectedRow(), 0) + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
+                System.out.println(result);
+                init();
             }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
@@ -236,10 +302,70 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
+                
+                    if((!password.getText().equals("")) && (!confpass.getText().equals("")) && (!password.getText().contains(" ")) && Password_Validation(password.getText())) 
+                    {
+                        ErrorBox("Password successfully changed!", "Changed password");
+                        String generatedSecuredPasswordHash = Controller.BCrypt.hashpw(password.getText(), Controller.BCrypt.gensalt(12));
+                        String sql = "UPDATE users SET password = '" + generatedSecuredPasswordHash + "' WHERE username='" + tableModel.getValueAt(table.getSelectedRow(), 0) + "';";
+                        try(Connection conn = DriverManager.getConnection(driverURL);
+                            Statement stmt = conn.createStatement()) {
+                            stmt.execute(sql);
+                        } catch (Exception ex) {}
+
+                        System.out.println(result);
+                        init();
+                    }
+//                    else if(!password.getText().equals(confpass.getText())&& (password.getText().equals("") || confpass.getText().equals(""))) 
+//                    {
+//                        ErrorBox("Passwords do not match AND password field is empty", "Invalid Password");
+//                    }
+//                    else if((password.getText().equals("") || confpass.getText().equals("")))
+//                    {
+//                        //if username is unique && passwords match && password fields are BLANK
+//                       ErrorBox("Password field is empty.", "Invalid Password");
+//                    }
+//                    else if(password.getText().contains(" ") || confpass.getText().contains(" ")){
+//                        ErrorBox("You can't use a space for your password", "Invalid Password");
+//                    }
+//                    else if(!(Password_Validation(password.getText()))){
+//                        ErrorBox("Password should contain special characters, numbers, upper and lowercase letters and be 8 characters long", "Invalid Password");
+//                    }
+//                    else if(!password.getText().equals(confpass.getText()) && (!password.getText().equals("")) && (!confpass.getText().equals(""))){
+//                        ErrorBox("Passwords do NOT match", "Invalid Password");
+//                    }
+
+                    else if (!password.getText().equals(confpass.getText()) && (password.getText().equals("") || confpass.getText().equals(""))) 
+                    {
+                        //if username is unique && passwords DON'T match && either pass or cPassword is blank 
+                        ErrorBox("Passwords do not match AND password field is empty", "Invalid Password");
+                        System.out.println(0);
+                    }
+                    else if(!password.getText().equals(confpass.getText()) && (!password.getText().equals("")) && (!confpass.getText().equals("")))
+                    {
+                        //if username is unique && passwords DON'T match && password fields are NOT empty
+                        ErrorBox("Passwords do not match! Try again.", "Invalid Password");
+                        System.out.println(1);
+                    }
+                    else if((password.getText().equals("") || confpass.getText().equals("")))
+                    {
+                        //if username is unique && passwords match && password fields are BLANK
+                        ErrorBox("Password field is empty.", "Invalid Password");
+                    }
+                    else if(password.getText().contains(" ") || confpass.getText().contains(" ")){
+                        ErrorBox("You can't use a space for your password", "Invalid Password");
+                    }
+                    else if(!(Password_Validation(password.getText()))){
+                        ErrorBox("Password should contain special characters, numbers, upper and lowercase letters and be 8 characters long", "Invalid Password");
+                    }
             }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
+     public static void ErrorBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "Error: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chgpassBtn;

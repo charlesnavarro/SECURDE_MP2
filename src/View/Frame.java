@@ -265,31 +265,31 @@ public class Frame extends javax.swing.JFrame {
                             break;
                     case 2: //client
                             contentView.show(Content, "clientHomePnl");
-                            adminBtn.setEnabled(false);
-                            managerBtn.setEnabled(false);
-                            staffBtn.setEnabled(false);
-                            clientBtn.setEnabled(true);
+                            adminBtn.setVisible(false);
+                            managerBtn.setVisible(false);
+                            staffBtn.setVisible(false);
+                            clientBtn.setVisible(true);
                             break;
                     case 3: //staff
                             contentView.show(Content, "staffHomePnl");
-                            adminBtn.setEnabled(false);
-                            managerBtn.setEnabled(false);
-                            staffBtn.setEnabled(true);
-                            clientBtn.setEnabled(false);
+                            adminBtn.setVisible(false);
+                            managerBtn.setVisible(false);
+                            staffBtn.setVisible(true);
+                            clientBtn.setVisible(false);
                             break;
                     case 4: //manager
                             contentView.show(Content, "managerHomePnl");
-                            adminBtn.setEnabled(false);
-                            managerBtn.setEnabled(true);
-                            staffBtn.setEnabled(false);
-                            clientBtn.setEnabled(false);
+                            adminBtn.setVisible(false);
+                            managerBtn.setVisible(true);
+                            staffBtn.setVisible(false);
+                            clientBtn.setVisible(false);
                             break;
                     case 5: //admin
                             contentView.show(Content, "adminHomePnl");
-                            adminBtn.setEnabled(true);
-                            managerBtn.setEnabled(false);
-                            staffBtn.setEnabled(false);
-                            clientBtn.setEnabled(false);
+                            adminBtn.setVisible(true);
+                            managerBtn.setVisible(false);
+                            staffBtn.setVisible(false);
+                            clientBtn.setVisible(false);
                             break;
                 }
             }
@@ -306,6 +306,14 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password, String confpass){
         main.sqlite.addUser(username, password);
+//        ArrayList<User> users = main.sqlite.getUsers();
+//        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+//            System.out.println("===== User " + users.get(nCtr).getId() + " =====");
+//            System.out.println(" Username: " + users.get(nCtr).getUsername());
+//            System.out.println(" Password: " + users.get(nCtr).getPassword());
+//            System.out.println(" Role: " + users.get(nCtr).getRole());
+//            System.out.println(" Locked: " + users.get(nCtr).getLocked());
+//        }
     }
     
     public void setCurrUser(String username, String password, int role)
