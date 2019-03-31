@@ -159,7 +159,7 @@ public class MgmtHistory extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        JTextField searchFld = new JTextField("0");
+        JTextField searchFld = new JTextField("");
         designer(searchFld, "SEARCH USERNAME OR PRODUCT");
 
         Object[] message = {

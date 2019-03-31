@@ -3,16 +3,26 @@ package View;
 
 import Controller.BCrypt;
 import Controller.CSVWriter;
+import Controller.SQLite;
 import Model.User;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.Timer;
 
 public class Login extends javax.swing.JPanel {
     int attempts = 0;
     int delay = 5000;
+    public SQLite sqlite;
     public Frame frame;
     public boolean loggedIn = false;   
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");  
+    Date date = new Date(); 
+    String driverURL = "jdbc:sqlite:" + "database.db";
     public Login() {
         initComponents();
     }
@@ -118,30 +128,65 @@ public class Login extends javax.swing.JPanel {
         String generatedSecuredPasswordHash = Controller.BCrypt.hashpw(password, Controller.BCrypt.gensalt(12)); //HASHING
         CSVWriter csv = new CSVWriter(username, password);
         csv.writeCSV(username, password);
+        
         ArrayList<User> users = frame.main.sqlite.getUsers();
         for (int nCtr = 0; nCtr < users.size(); nCtr++) {
             if (username.equals(users.get(nCtr).getUsername())) { //CHECKS USERNAME
                 jLabel3.setText("");
                 if (BCrypt.checkpw(password, users.get(nCtr).getPassword())) { // PASSWORD HASHED AND ORIG PASSWORD
                     if(users.get(nCtr).getLocked() != 1){
-//                    System.out.println(password);
-//                    System.out.println(generatedSecuredPasswordHash);
-                    loggedIn = true;
-                    frame.setCurrUser(users.get(nCtr).getUsername(), users.get(nCtr).getPassword(), users.get(nCtr).getRole());
-                    jLabel3.setText("");
-                    frame.mainNav();
-                    nCtr = users.size() + 1;
-                    attempts = 0;
+                        if(users.get(nCtr).getRole() != 1){
+        //                    System.out.println(password);
+        //                    System.out.println(generatedSecuredPasswordHash);
+                            loggedIn = true;
+                            frame.setCurrUser(users.get(nCtr).getUsername(), users.get(nCtr).getPassword(), users.get(nCtr).getRole());
+                            jLabel3.setText("");
+                            frame.mainNav();
+                            nCtr = users.size() + 1;
+                            attempts = 0;
+//                            sqlite.addLogs("NOTICE", username, "Successful login", formatter.format(date));
+                            String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Successful login" + "','" + formatter.format(date) + "')";
+        
+                            try (Connection conn = DriverManager.getConnection(driverURL);
+                                Statement stmt = conn.createStatement()){
+                                stmt.execute(sql);
+                            } catch (Exception ex) {}
+                            }
+                        else if(users.get(nCtr).getRole() == 1){
+                            nCtr = users.size() +1;
+                            jLabel3.setText("Login failed: Your account has been disabled");
+//                            sqlite.addLogs("NOTICE", username, "Unsuccessful login", formatter.format(date));
+                            String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Unsuccessful login" + "','" + formatter.format(date) + "')";
+        
+                            try (Connection conn = DriverManager.getConnection(driverURL);
+                                Statement stmt = conn.createStatement()){
+                                stmt.execute(sql);
+                            } catch (Exception ex) {}
+                        }
                     }
                     else if(users.get(nCtr).getLocked() == 1){
                         nCtr = users.size() +1;
                         jLabel3.setText("Login failed: You have been locked out of your account");
+//                        sqlite.addLogs("NOTICE", username, "Unsuccessful login", formatter.format(date));
+                        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Unsuccessful login" + "','" + formatter.format(date) + "')";
+        
+                            try (Connection conn = DriverManager.getConnection(driverURL);
+                                Statement stmt = conn.createStatement()){
+                                stmt.execute(sql);
+                            } catch (Exception ex) {}
                     }
                 }
                 else {
                     jLabel3.setText("Login failed: Invalid username or password");
                     nCtr = users.size() + 1;
                         attempts++;
+//                    sqlite.addLogs("NOTICE", username, "Unsuccessful login", formatter.format(date));
+                    String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Unsuccessful login" + "','" + formatter.format(date) + "')";
+        
+                            try (Connection conn = DriverManager.getConnection(driverURL);
+                                Statement stmt = conn.createStatement()){
+                                stmt.execute(sql);
+                            } catch (Exception ex) {}
                 }
             }
             else if (!username.equals(users.get(nCtr).getUsername())) {

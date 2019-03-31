@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,7 +25,6 @@ import sun.applet.Main;
  * @author beepxD
  */
 public class MgmtProduct extends javax.swing.JPanel {
-
     private Timestamp timestamp;
     public History history;
     private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -184,6 +184,8 @@ public class MgmtProduct extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void purchaseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseBtnActionPerformed
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");  
+        Date date = new Date();  
         if(table.getSelectedRow() >= 0){
             JTextField stockFld = new JTextField("0");
             designer(stockFld, "PRODUCT STOCK");
@@ -196,7 +198,20 @@ public class MgmtProduct extends javax.swing.JPanel {
 
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(stockFld.getText());
-//                sqlite.addHistory( ,tableModel.getValueAt(table.getSelectedRow(), 0), Integer.parseInt(stockFld.getText())), );
+//                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 1));
+                if(Integer.parseInt(stockFld.getText()) <= Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) && Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) != 0){
+                    sqlite.addHistory("test", (String) tableModel.getValueAt(table.getSelectedRow(), 0), Integer.parseInt(stockFld.getText()), formatter.format(date));
+                    int quantity = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString());
+                    quantity = quantity - Integer.parseInt(stockFld.getText());
+                    sqlite.purchaseProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), quantity);
+                    init();
+                }
+                else if(Integer.parseInt(stockFld.getText()) > Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString())){
+                    ErrorBox("There is not enough stock", "Item out of stock");
+                }
+                else if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) == 0){
+                    ErrorBox("You cannot purchase this item anymore", "Item out of stock");
+                }
             }
         }
     }//GEN-LAST:event_purchaseBtnActionPerformed
@@ -246,14 +261,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                 
-                String sql = "UPDATE product SET name = '" + nameFld.getText() +
-                        "', stock = " + Integer.parseInt(stockFld.getText()) + 
-                                ", price = " + Float.parseFloat(priceFld.getText()) + 
-                                " WHERE name='" + tableModel.getValueAt(table.getSelectedRow(), 0) + "';";
-                try(Connection conn = DriverManager.getConnection(driverURL);
-                    Statement stmt = conn.createStatement()) {
-                    stmt.execute(sql);
-                } catch (Exception ex) {}
+                sqlite.editProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
                 System.out.println(result);
                 init();
             }
@@ -266,13 +274,16 @@ public class MgmtProduct extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                sqlite.removeProduct((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.removeProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
-
+    public static void ErrorBox(String infoMessage, String titleBar)
+        {
+            JOptionPane.showMessageDialog(null, infoMessage, "Error: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+        }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JButton deleteBtn;

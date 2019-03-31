@@ -269,6 +269,31 @@ public class SQLite {
         } catch (Exception ex) {}
     }
     
+    public void lockUser(String username, int i){
+         String sql = "UPDATE users SET locked = " + i + " WHERE username='" + username + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
+    }
+    
+    public void changePassword(String username, String password){
+        String sql = "UPDATE users SET password = '" + password + "' WHERE username='" + username + "';";
+                        try(Connection conn = DriverManager.getConnection(driverURL);
+                            Statement stmt = conn.createStatement()) {
+                            stmt.execute(sql);
+                        } catch (Exception ex) {}
+    }
+    
+    public void editRole(String username, char role){
+        System.out.println(role);
+        String sql = "UPDATE users SET role = " + role + " WHERE username='" + username + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
+    }
+    
     public Product getProduct(String name){
         String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
         Product product = null;
@@ -291,5 +316,22 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Product " + name + " has been deleted.");
         } catch (Exception ex) {}
+    }
+    
+    public void editProduct(String username, String name, int stock, float price){
+        String sql = "UPDATE product SET name = '" + name +
+                        "', stock = " + stock + ", price = " + price + " WHERE name='" + username + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
+    }
+    
+    public void purchaseProduct(String username, int quantity){
+        String sql = "UPDATE product SET stock = " + quantity +" WHERE name='" + username + "';";
+                try(Connection conn = DriverManager.getConnection(driverURL);
+                    Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (Exception ex) {}
     }
 }

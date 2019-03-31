@@ -322,6 +322,9 @@ public class Frame extends javax.swing.JFrame {
         this.password = password;
         this.role = role;
     }
+    public String getUsername() {
+        return username;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
