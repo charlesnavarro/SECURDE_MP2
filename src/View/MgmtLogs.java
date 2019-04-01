@@ -136,6 +136,8 @@ public class MgmtLogs extends javax.swing.JPanel {
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
         sqlite.dropLogsTable();
+        sqlite.createLogsTable();
+//        ErrorBox("Successfully deleted.", "Delete successful");
         init();
     }//GEN-LAST:event_clearBtnActionPerformed
 

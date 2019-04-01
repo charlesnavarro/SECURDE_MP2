@@ -204,6 +204,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                     int quantity = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString());
                     quantity = quantity - Integer.parseInt(stockFld.getText());
                     sqlite.purchaseProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), quantity);
+//                    ErrorBox("Successfully purchased.", "Purchase successful");
                     init();
                 }
                 else if(Integer.parseInt(stockFld.getText()) > Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString())){
@@ -236,6 +237,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             System.out.println(stockFld.getText());
             System.out.println(priceFld.getText());
             sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
+//            ErrorBox("Successfully added.", "Add successful");
             init();
         }
     }//GEN-LAST:event_addBtnActionPerformed
@@ -260,8 +262,8 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(nameFld.getText());
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
-                
                 sqlite.editProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
+//                ErrorBox("Successfully updated.", "Update successful");
                 System.out.println(result);
                 init();
             }
@@ -275,6 +277,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+//                ErrorBox("Successfully deleted.", "delete successful");
                 init();
             }
         }

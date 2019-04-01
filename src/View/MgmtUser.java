@@ -66,7 +66,6 @@ public class MgmtUser extends javax.swing.JPanel {
     
     public SQLite sqlite;
     public DefaultTableModel tableModel;
-    String driverURL = "jdbc:sqlite:" + "database.db";
     
     public MgmtUser(SQLite sqlite) {
         initComponents();
@@ -235,6 +234,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
                 sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), result.charAt(0));
+//                ErrorBox("Successfully edited role.", "Edit successful");
                 init();
             
             }
@@ -248,6 +248,7 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+//                ErrorBox("Successfully deleted.", "Delete successful");
                 init();
             }
         }
@@ -273,6 +274,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
                 System.out.println(result);
+//                ErrorBox("Successfully "+ state+"ed.", "Update successful");
                 init();
             }
         }
