@@ -13,6 +13,11 @@ import java.util.ArrayList;
 
 public class SQLite {
     
+    
+    public String username;
+    public String password; 
+    public int role;
+    
     public int DEBUG_MODE = 0;
     String driverURL = "jdbc:sqlite:" + "database.db";
     

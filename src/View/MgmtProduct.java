@@ -30,6 +30,7 @@ public class MgmtProduct extends javax.swing.JPanel {
     private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public Frame frame;
     String driverURL = "jdbc:sqlite:" + "database.db";
     
     public MgmtProduct(SQLite sqlite) {
@@ -200,7 +201,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
 //                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 1));
                 if(Integer.parseInt(stockFld.getText()) <= Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) && Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) != 0){
-                    sqlite.addHistory("test", (String) tableModel.getValueAt(table.getSelectedRow(), 0), Integer.parseInt(stockFld.getText()), formatter.format(date));
+                    sqlite.addHistory(sqlite.username, (String) tableModel.getValueAt(table.getSelectedRow(), 0), Integer.parseInt(stockFld.getText()), formatter.format(date));
                     int quantity = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString());
                     quantity = quantity - Integer.parseInt(stockFld.getText());
                     sqlite.purchaseProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), quantity);

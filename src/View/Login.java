@@ -151,6 +151,7 @@ public class Login extends javax.swing.JPanel {
                                 Statement stmt = conn.createStatement()){
                                 stmt.execute(sql);
                             } catch (Exception ex) {}
+
                             }
                         else if(users.get(nCtr).getRole() == 1){
                             nCtr = users.size() +1;

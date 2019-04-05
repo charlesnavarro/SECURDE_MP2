@@ -216,10 +216,6 @@ public class Frame extends javax.swing.JFrame {
     private CardLayout contentView = new CardLayout();
     private CardLayout frameView = new CardLayout();
     
-    public String username;
-    public String password; 
-    public int role;
-    
     public void init(Main controller){
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("SECURDE - SECURITY Svcs");
@@ -255,9 +251,9 @@ public class Frame extends javax.swing.JFrame {
         ArrayList<User> users = main.sqlite.getUsers(); 
         for(int i=0; i<users.size(); i++)
         {
-            if(users.get(i).getUsername().equals(username) &&
-               users.get(i).getPassword().equals(password) && 
-               users.get(i).getRole() == role)
+            if(users.get(i).getUsername().equals(main.sqlite.username) &&
+               users.get(i).getPassword().equals(main.sqlite.password) && 
+               users.get(i).getRole() == main.sqlite.role)
             {
                 switch(users.get(i).getRole())
                 {
@@ -318,12 +314,12 @@ public class Frame extends javax.swing.JFrame {
     
     public void setCurrUser(String username, String password, int role)
     {
-        this.username = username; 
-        this.password = password;
-        this.role = role;
+        main.sqlite.username = username; 
+        main.sqlite.password = password;
+        main.sqlite.role = role;
     }
     public String getUsername() {
-        return username;
+        return main.sqlite.username;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
