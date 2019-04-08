@@ -129,7 +129,7 @@ public class MgmtUser extends javax.swing.JPanel {
                             users.get(nCtr).getLocked()});
                         }
                         editRoleBtn.setVisible(true);
-                        deleteBtn.setVisible(false);
+                        deleteBtn.setVisible(true);
                         lockBtn.setVisible(true);
                         chgpassBtn.setVisible(true);
                         break;
@@ -284,7 +284,15 @@ public class MgmtUser extends javax.swing.JPanel {
             if(result != null){
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
-                sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), result.charAt(0));
+                if(sqlite.role == 4){
+                    if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2 || Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 3){
+                        sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), result.charAt(0));
+                    }
+                }
+                else if(sqlite.role == 5){
+                    sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), result.charAt(0));
+                }
+                
 //                ErrorBox("Successfully edited role.", "Edit successful");
                 init();
             
@@ -298,7 +306,17 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                if(sqlite.role == 4){
+                    if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2 || Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 3){
+                        sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                    }
+                    else
+                        ErrorBox("cant", "Update successful");
+                }
+                else if(sqlite.role == 5){
+                    sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                }
+                
 //                ErrorBox("Successfully deleted.", "Delete successful");
                 init();
             }
@@ -323,7 +341,19 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                if(sqlite.role == 3){
+                    if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2){
+                        sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                    }
+                }
+                else if(sqlite.role == 4){
+                    if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2 || Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 3){
+                        sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                    }
+                }
+                else if(sqlite.role == 5){
+                    sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                }
                 System.out.println(result);
 //                ErrorBox("Successfully "+ state+"ed.", "Update successful");
                 init();
@@ -360,13 +390,11 @@ public class MgmtUser extends javax.swing.JPanel {
                     {
                         //if username is unique && passwords DON'T match && either pass or cPassword is blank 
                         ErrorBox("Passwords do not match AND password field is empty", "Invalid Password");
-                        System.out.println(0);
                     }
                     else if(!password.getText().equals(confpass.getText()) && (!password.getText().equals("")) && (!confpass.getText().equals("")))
                     {
                         //if username is unique && passwords DON'T match && password fields are NOT empty
                         ErrorBox("Passwords do not match! Try again.", "Invalid Password");
-                        System.out.println(1);
                     }
                     else if((password.getText().equals("") || confpass.getText().equals("")))
                     {
