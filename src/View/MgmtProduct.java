@@ -65,8 +65,31 @@ public class MgmtProduct extends javax.swing.JPanel {
         System.out.println("sqlite.role: " + sqlite.role);
         System.out.println("sqlite.getRole(): " + sqlite.getRole());
         
-        if(sqlite.role==2)
-            addBtn.setVisible(false);
+        
+        switch(sqlite.role)
+        {
+            case 2: purchaseBtn.setVisible(true);
+                    addBtn.setVisible(false);
+                    editBtn.setVisible(false);
+                    deleteBtn.setVisible(false);
+                    break;
+            case 3: purchaseBtn.setVisible(true);
+                    addBtn.setVisible(true);
+                    editBtn.setVisible(true);
+                    deleteBtn.setVisible(false);
+                    break;
+            case 4: purchaseBtn.setVisible(true);
+                    addBtn.setVisible(true);
+                    editBtn.setVisible(true);
+                    deleteBtn.setVisible(true);
+                    break;
+            case 5: purchaseBtn.setVisible(true);
+                    addBtn.setVisible(true);
+                    editBtn.setVisible(true);
+                    deleteBtn.setVisible(true);
+                    break;
+                    
+        }
         
     }
     
