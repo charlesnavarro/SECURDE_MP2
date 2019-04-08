@@ -176,12 +176,25 @@ public class MgmtHistory extends javax.swing.JPanel {
 
 //          LOAD CONTENTS
             ArrayList<History> history = sqlite.getHistory();
+           
+        /*    searchFld.setText(searchFld.getText().toLowerCase());
+            for(int i=0; i<history.size(); i++)
+            {
+                history.get(i).setUsername(history.get(i).getUsername().toLowerCase());
+                history.get(i).setName(history.get(i).getName().toLowerCase());
+                System.out.println("entered history: " + i);
+                System.out.println("username " + i + ": " + history.get(i).getUsername());
+                System.out.println("name " + i + ": " + history.get(i).getName());
+                System.out.println("-----------------------------------------------------");
+            }
+        */
+        
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
-                if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
-                   history.get(nCtr).getUsername().contains(searchFld.getText()) || 
-                   searchFld.getText().contains(history.get(nCtr).getName()) || 
-                   history.get(nCtr).getName().contains(searchFld.getText())){
-                
+                if(searchFld.getText().contains(history.get(nCtr).getUsername()) || //if searchField contains username from history
+                   history.get(nCtr).getUsername().contains(searchFld.getText()) || //if history has searchFld username 
+                   searchFld.getText().contains(history.get(nCtr).getName()) ||     //if searchField contains name from history
+                   history.get(nCtr).getName().contains(searchFld.getText())){      //if history has searchFld name
+                    System.out.println("FOUND!!!!!");
                     Product product = sqlite.getProduct(history.get(nCtr).getName());
                     tableModel.addRow(new Object[]{
                         history.get(nCtr).getUsername(), 

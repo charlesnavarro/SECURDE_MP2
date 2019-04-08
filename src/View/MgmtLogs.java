@@ -45,6 +45,16 @@ public class MgmtLogs extends javax.swing.JPanel {
                 logs.get(nCtr).getDesc(), 
                 logs.get(nCtr).getTimestamp()});
         }
+        
+        switch(sqlite.role)
+        {
+            case 4: debugBtn.setVisible(true);
+                    clearBtn.setVisible(false);
+                    break;
+            case 5: debugBtn.setVisible(true);
+                    clearBtn.setVisible(true);
+                    break;
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
