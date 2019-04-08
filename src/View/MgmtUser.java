@@ -98,6 +98,10 @@ public class MgmtUser extends javax.swing.JPanel {
                             users.get(nCtr).getRole(), 
                             users.get(nCtr).getLocked()});
                         }
+                        editRoleBtn.setVisible(false);
+                        deleteBtn.setVisible(false);
+                        lockBtn.setVisible(false);
+                        chgpassBtn.setVisible(true);
                         break;
                     case 3:
                         if(users.get(nCtr).getRole() == 2 || users.get(nCtr).getRole() == 3){
@@ -107,6 +111,10 @@ public class MgmtUser extends javax.swing.JPanel {
                             users.get(nCtr).getRole(), 
                             users.get(nCtr).getLocked()});
                         }
+                        editRoleBtn.setVisible(false);
+                        deleteBtn.setVisible(false);
+                        lockBtn.setVisible(true);
+                        chgpassBtn.setVisible(false);
                         break;
                     case 4:
                         if(users.get(nCtr).getRole() == 2 || users.get(nCtr).getRole() == 3 || users.get(nCtr).getRole() == 4 ){
@@ -116,6 +124,10 @@ public class MgmtUser extends javax.swing.JPanel {
                             users.get(nCtr).getRole(), 
                             users.get(nCtr).getLocked()});
                         }
+                        editRoleBtn.setVisible(true);
+                        deleteBtn.setVisible(false);
+                        lockBtn.setVisible(true);
+                        chgpassBtn.setVisible(false);
                         break;
                     case 5:
                         tableModel.addRow(new Object[]{
@@ -123,6 +135,10 @@ public class MgmtUser extends javax.swing.JPanel {
                             users.get(nCtr).getPassword(), 
                             users.get(nCtr).getRole(), 
                             users.get(nCtr).getLocked()});
+                        editRoleBtn.setVisible(true);
+                        deleteBtn.setVisible(true);
+                        lockBtn.setVisible(true);
+                        chgpassBtn.setVisible(true);
                         break;
             }
         }
