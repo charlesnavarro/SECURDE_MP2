@@ -53,7 +53,7 @@ public class MgmtUser extends javax.swing.JPanel {
          Matcher m3 = p3.matcher(s);
          boolean upper = m3.find();
          
-         if (symbols && numbers && lower && upper && s.length()>= 8){
+         if (symbols && numbers && lower && upper && s.length()>= 8 && s.length() <= 32){
             System.out.println("There is a special character, number, lowercase and uppercase in my string & 8 characters long");
             System.out.println(s);
             return true;
@@ -66,6 +66,7 @@ public class MgmtUser extends javax.swing.JPanel {
     
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public String u;
     
     public MgmtUser(SQLite sqlite) {
         initComponents();
@@ -89,6 +90,9 @@ public class MgmtUser extends javax.swing.JPanel {
 //      LOAD CONTENTS
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
+            if(users.get(nCtr).getUsername().equals(sqlite.username)){
+                u = users.get(nCtr).getUsername();
+            }
             switch(sqlite.role){
                     case 2:
                         if(users.get(nCtr).getRole() == 2 && users.get(nCtr).getUsername().equals(sqlite.username)){
@@ -113,8 +117,8 @@ public class MgmtUser extends javax.swing.JPanel {
                         }
                         editRoleBtn.setVisible(false);
                         deleteBtn.setVisible(false);
-                        lockBtn.setVisible(true);
-                        chgpassBtn.setVisible(false);
+                        lockBtn.setVisible(false);
+                        chgpassBtn.setVisible(true);
                         break;
                     case 4:
                         if(users.get(nCtr).getRole() == 2 || users.get(nCtr).getRole() == 3 || users.get(nCtr).getRole() == 4 ){
@@ -127,7 +131,7 @@ public class MgmtUser extends javax.swing.JPanel {
                         editRoleBtn.setVisible(true);
                         deleteBtn.setVisible(false);
                         lockBtn.setVisible(true);
-                        chgpassBtn.setVisible(false);
+                        chgpassBtn.setVisible(true);
                         break;
                     case 5:
                         tableModel.addRow(new Object[]{
@@ -344,7 +348,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
                 
-                    if((!password.getText().equals("")) && (!confpass.getText().equals("")) && (!password.getText().contains(" ")) && Password_Validation(password.getText())) 
+                    if(password.getText().equals(confpass.getText()) && (!password.getText().equals("")) && (!confpass.getText().equals("")) && (!password.getText().contains(" ")) && Password_Validation(password.getText()) && (sqlite.username.equals(tableModel.getValueAt(table.getSelectedRow(), 0)) || sqlite.role == 4 || sqlite.role == 5)) 
                     {
                         ErrorBox("Password successfully changed!", "Changed password");
                         String generatedSecuredPasswordHash = Controller.BCrypt.hashpw(password.getText(), Controller.BCrypt.gensalt(12));
@@ -373,7 +377,10 @@ public class MgmtUser extends javax.swing.JPanel {
                         ErrorBox("You can't use a space for your password", "Invalid Password");
                     }
                     else if(!(Password_Validation(password.getText()))){
-                        ErrorBox("Password should contain special characters, numbers, upper and lowercase letters and be 8 characters long", "Invalid Password");
+                        ErrorBox("Password should contain special characters, numbers, upper and lowercase letters and be 8-32 characters long", "Invalid Password");
+                    }
+                    else if(!sqlite.username.equals(tableModel.getValueAt(table.getSelectedRow(), 0))){
+                        ErrorBox("You can only change your own password.", "Error");
                     }
             }
         }

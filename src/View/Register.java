@@ -39,8 +39,8 @@ public boolean Password_Validation(String s) {
          Matcher m2 = p2.matcher(s);
          boolean lower = m2.find();
          
-         if (symbols && numbers && lower && upper && s.length()>= 8){
-            System.out.println("There is a special character, number, lowercase and uppercase in my string & 8 characters long");
+         if (symbols && numbers && lower && upper && s.length()>= 8 && s.length() <= 32){
+            System.out.println("There is a special character, number, lowercase and uppercase in my string & 8-32 characters long");
             System.out.println(s);
             return true;
          }
