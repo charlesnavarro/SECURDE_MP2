@@ -89,11 +89,42 @@ public class MgmtUser extends javax.swing.JPanel {
 //      LOAD CONTENTS
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
-            tableModel.addRow(new Object[]{
-                users.get(nCtr).getUsername(), 
-                users.get(nCtr).getPassword(), 
-                users.get(nCtr).getRole(), 
-                users.get(nCtr).getLocked()});
+            switch(sqlite.role){
+                    case 2:
+                        if(users.get(nCtr).getRole() == 2 && users.get(nCtr).getUsername().equals(sqlite.username)){
+                        tableModel.addRow(new Object[]{
+                            users.get(nCtr).getUsername(), 
+                            users.get(nCtr).getPassword(), 
+                            users.get(nCtr).getRole(), 
+                            users.get(nCtr).getLocked()});
+                        }
+                        break;
+                    case 3:
+                        if(users.get(nCtr).getRole() == 2 || users.get(nCtr).getRole() == 3){
+                        tableModel.addRow(new Object[]{
+                            users.get(nCtr).getUsername(), 
+                            users.get(nCtr).getPassword(), 
+                            users.get(nCtr).getRole(), 
+                            users.get(nCtr).getLocked()});
+                        }
+                        break;
+                    case 4:
+                        if(users.get(nCtr).getRole() == 2 || users.get(nCtr).getRole() == 3 || users.get(nCtr).getRole() == 4 ){
+                        tableModel.addRow(new Object[]{
+                            users.get(nCtr).getUsername(), 
+                            users.get(nCtr).getPassword(), 
+                            users.get(nCtr).getRole(), 
+                            users.get(nCtr).getLocked()});
+                        }
+                        break;
+                    case 5:
+                        tableModel.addRow(new Object[]{
+                            users.get(nCtr).getUsername(), 
+                            users.get(nCtr).getPassword(), 
+                            users.get(nCtr).getRole(), 
+                            users.get(nCtr).getLocked()});
+                        break;
+            }
         }
     }
 
