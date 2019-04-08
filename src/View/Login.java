@@ -140,6 +140,12 @@ public class Login extends javax.swing.JPanel {
         //                    System.out.println(generatedSecuredPasswordHash);
                             loggedIn = true;
                             frame.setCurrUser(users.get(nCtr).getUsername(), users.get(nCtr).getPassword(), users.get(nCtr).getRole());
+                            frame.main.sqlite.setUsername(users.get(nCtr).getUsername());
+                            frame.main.sqlite.setPassword(users.get(nCtr).getPassword());
+                            frame.main.sqlite.setRole(users.get(nCtr).getRole());
+                            System.out.println("CURRENT USERNAME: " + frame.main.sqlite.getUsername());
+                            System.out.println("CURRENT PASSWORD: " + frame.main.sqlite.getPassword());
+                            System.out.println("CURRENT ROLE: " + frame.main.sqlite.getRole());
                             jLabel3.setText("");
                             frame.mainNav();
                             nCtr = users.size() + 1;

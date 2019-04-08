@@ -44,6 +44,7 @@ public class MgmtProduct extends javax.swing.JPanel {
 //        addBtn.setVisible(false);
 //        editBtn.setVisible(false);
 //        deleteBtn.setVisible(false);
+        
     }
 
     public void init(){
@@ -60,6 +61,13 @@ public class MgmtProduct extends javax.swing.JPanel {
                 products.get(nCtr).getStock(), 
                 products.get(nCtr).getPrice()});
         }
+        
+        System.out.println("sqlite.role: " + sqlite.role);
+        System.out.println("sqlite.getRole(): " + sqlite.getRole());
+        
+        if(sqlite.role==2)
+            addBtn.setVisible(false);
+        
     }
     
     public void designer(JTextField component, String text){
