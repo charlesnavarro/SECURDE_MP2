@@ -52,6 +52,14 @@ public class ManagerHome extends javax.swing.JPanel {
 //        logsBtn.setVisible(false);
     }
     
+    public void unmark()
+    {
+        usersBtn.setForeground(Color.black);
+        productsBtn.setForeground(Color.black);
+        historyBtn.setForeground(Color.black);
+        logsBtn.setForeground(Color.black);
+    }
+    
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
     }

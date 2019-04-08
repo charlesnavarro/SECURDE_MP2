@@ -183,21 +183,25 @@ public class Frame extends javax.swing.JFrame {
     private void adminBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBtnActionPerformed
         adminHomePnl.showPnl("home");
         contentView.show(Content, "adminHomePnl");
+        adminHomePnl.unmark();
     }//GEN-LAST:event_adminBtnActionPerformed
 
     private void managerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managerBtnActionPerformed
         managerHomePnl.showPnl("home");
         contentView.show(Content, "managerHomePnl");
+        managerHomePnl.unmark();
     }//GEN-LAST:event_managerBtnActionPerformed
 
     private void staffBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffBtnActionPerformed
         staffHomePnl.showPnl("home");
         contentView.show(Content, "staffHomePnl");
+        staffHomePnl.unmark();
     }//GEN-LAST:event_staffBtnActionPerformed
 
     private void clientBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientBtnActionPerformed
         clientHomePnl.showPnl("home");
         contentView.show(Content, "clientHomePnl");
+        clientHomePnl.unmark();
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
