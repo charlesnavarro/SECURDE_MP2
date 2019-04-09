@@ -184,7 +184,7 @@ public boolean Password_Validation(String s) {
         for(int i=0; i<users.size(); i++)
         {
             if(user.contains(" ")){
-                jLabel2.setText("You can't have a space for your username");
+                jLabel2.setText("Unable for username to contain a space");
             }
             //if username is not unique
             if(user.equalsIgnoreCase(users.get(i).getUsername())){
@@ -229,7 +229,7 @@ public boolean Password_Validation(String s) {
             jLabel3.setText("Password field is empty.");
         }
         else if(pass.contains(" ") || cPassword.contains(" ")){
-            jLabel3.setText("You can't use a space for your password");
+            jLabel3.setText("Unable for password to contain a space");
         }
         else if(!(Password_Validation(pass))){
             jLabel3.setText("Password should contain special characters, numbers, upper and lowercase letters and be 8 characters long");
