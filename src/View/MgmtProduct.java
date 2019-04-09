@@ -272,7 +272,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             System.out.println(stockFld.getText());
             System.out.println(priceFld.getText());
             sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
-            sqlite.addLogs("NOTICE", sqlite.username, "Successfully added " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
+            sqlite.addLogs("NOTICE", sqlite.username, "Successfully added " + nameFld.getText(), new Timestamp(new Date().getTime()).toString());
             init();
             
 //            ErrorBox("Successfully added.", "Add successful");

@@ -7,7 +7,9 @@ package View;
 
 import Controller.SQLite;
 import Model.Logs;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -147,6 +149,7 @@ public class MgmtLogs extends javax.swing.JPanel {
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
         sqlite.dropLogsTable();
         sqlite.createLogsTable();
+        sqlite.addLogs("NOTICE", sqlite.username, "Successfully deleted logs table", new Timestamp(new Date().getTime()).toString());
 //        ErrorBox("Successfully deleted.", "Delete successful");
         init();
     }//GEN-LAST:event_clearBtnActionPerformed
