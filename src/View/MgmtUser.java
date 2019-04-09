@@ -12,7 +12,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -287,10 +289,12 @@ public class MgmtUser extends javax.swing.JPanel {
                 if(sqlite.role == 4){
                     if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2 || Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 3){
                         sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), result.charAt(0));
+                        sqlite.addLogs("NOTICE", sqlite.username, "Successfully changed role of " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                     }
                 }
                 else if(sqlite.role == 5){
                     sqlite.editRole(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), result.charAt(0));
+                    sqlite.addLogs("NOTICE", sqlite.username, "Successfully changed role of " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                 }
                 
 //                ErrorBox("Successfully edited role.", "Edit successful");
@@ -310,11 +314,10 @@ public class MgmtUser extends javax.swing.JPanel {
                     if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2 || Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 3){
                         sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                     }
-                    else
-                        ErrorBox("cant", "Update successful");
                 }
                 else if(sqlite.role == 5){
                     sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                    sqlite.addLogs("NOTICE", sqlite.username, "Successfully deleted " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                 }
                 
 //                ErrorBox("Successfully deleted.", "Delete successful");
@@ -344,15 +347,18 @@ public class MgmtUser extends javax.swing.JPanel {
                 if(sqlite.role == 3){
                     if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2){
                         sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                        sqlite.addLogs("NOTICE", sqlite.username, "Successfully "+ state + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                     }
                 }
                 else if(sqlite.role == 4){
                     if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 2 || Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 3){
                         sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                        sqlite.addLogs("NOTICE", sqlite.username, "Successfully "+ state + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                     }
                 }
                 else if(sqlite.role == 5){
                     sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), i);
+                    sqlite.addLogs("NOTICE", sqlite.username, "Successfully "+ state + "ed " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                 }
                 System.out.println(result);
 //                ErrorBox("Successfully "+ state+"ed.", "Update successful");
@@ -383,31 +389,38 @@ public class MgmtUser extends javax.swing.JPanel {
                         ErrorBox("Password successfully changed!", "Changed password");
                         String generatedSecuredPasswordHash = Controller.BCrypt.hashpw(password.getText(), Controller.BCrypt.gensalt(12));
                         sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), generatedSecuredPasswordHash);
+                        sqlite.addLogs("NOTICE", sqlite.username, "Successfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         System.out.println(result);
                         init();
                     }
                     else if (!password.getText().equals(confpass.getText()) && (password.getText().equals("") || confpass.getText().equals(""))) 
                     {
                         //if username is unique && passwords DON'T match && either pass or cPassword is blank 
+                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Passwords do not match AND password field is empty", "Invalid Password");
                     }
                     else if(!password.getText().equals(confpass.getText()) && (!password.getText().equals("")) && (!confpass.getText().equals("")))
                     {
                         //if username is unique && passwords DON'T match && password fields are NOT empty
+                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Passwords do not match! Try again.", "Invalid Password");
                     }
                     else if((password.getText().equals("") || confpass.getText().equals("")))
                     {
                         //if username is unique && passwords match && password fields are BLANK
+                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Password field is empty.", "Invalid Password");
                     }
                     else if(password.getText().contains(" ") || confpass.getText().contains(" ")){
+                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         ErrorBox("You can't use a space for your password", "Invalid Password");
                     }
                     else if(!(Password_Validation(password.getText()))){
+                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Password should contain special characters, numbers, upper and lowercase letters and be 8-32 characters long", "Invalid Password");
                     }
                     else if(!sqlite.username.equals(tableModel.getValueAt(table.getSelectedRow(), 0))){
+                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
                         ErrorBox("You can only change your own password.", "Error");
                     }
             }
