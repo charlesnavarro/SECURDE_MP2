@@ -50,7 +50,14 @@ public class StaffHome extends javax.swing.JPanel {
 //        usersBtn.setVisible(false);
 //        productsBtn.setVisible(false);
         logsBtn.setVisible(false);
-
+    }
+    
+    public void unmark()
+    {
+        usersBtn.setForeground(Color.black);
+        productsBtn.setForeground(Color.black);
+        historyBtn.setForeground(Color.black);
+        logsBtn.setForeground(Color.black);
     }
     
     public void showPnl(String panelName){
