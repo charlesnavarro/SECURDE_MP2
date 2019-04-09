@@ -190,10 +190,10 @@ public class MgmtHistory extends javax.swing.JPanel {
         */
         
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
-                if(searchFld.getText().contains(history.get(nCtr).getUsername()) || //if searchField contains username from history
-                   history.get(nCtr).getUsername().contains(searchFld.getText()) || //if history has searchFld username 
-                   searchFld.getText().contains(history.get(nCtr).getName()) ||     //if searchField contains name from history
-                   history.get(nCtr).getName().contains(searchFld.getText())){      //if history has searchFld name
+                if(searchFld.getText().toLowerCase().contains(history.get(nCtr).getUsername().toLowerCase()) || //if searchField contains username from history
+                   history.get(nCtr).getUsername().toLowerCase().contains(searchFld.getText().toLowerCase()) || //if history has searchFld username 
+                   searchFld.getText().toLowerCase().contains(history.get(nCtr).getName().toLowerCase()) ||     //if searchField contains name from history
+                   history.get(nCtr).getName().toLowerCase().contains(searchFld.getText().toLowerCase())){      //if history has searchFld name
                     System.out.println("FOUND!!!!!");
                     Product product = sqlite.getProduct(history.get(nCtr).getName());
                     tableModel.addRow(new Object[]{
