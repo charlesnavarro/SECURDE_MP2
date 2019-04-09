@@ -243,10 +243,12 @@ public class MgmtProduct extends javax.swing.JPanel {
                 else if(Integer.parseInt(stockFld.getText()) > Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString())){
                     ErrorBox("There is not enough stock", "Item out of stock");
                     sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully purchased " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
+                    sqlite.addEnabledLogs("NOTICE", sqlite.username, "Unsuccessfully purchased", "Not enough stock", new Timestamp(new Date().getTime()).toString());
                 }
                 else if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) == 0){
                     ErrorBox("You cannot purchase this item anymore", "Item out of stock");
                     sqlite.addLogs("NOTICE", sqlite.username, "Unuccessfully purchased " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
+                    sqlite.addEnabledLogs("NOTICE", sqlite.username, "Unsuccessfully purchased", "Item out of stock", new Timestamp(new Date().getTime()).toString());
                 }
             }
         }
@@ -273,6 +275,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             System.out.println(priceFld.getText());
             if(nameFld.getText().equals("") || stockFld.getText().equals("") || priceFld.getText().equals("")){
                 sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully added product", new Timestamp(new Date().getTime()).toString());
+                sqlite.addEnabledLogs("NOTICE", sqlite.username, "Unsuccessfully added product", "Empty text field", new Timestamp(new Date().getTime()).toString());
                 ErrorBox("Must not leave text field empty", "Missing input");
             }
             else{

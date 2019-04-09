@@ -20,6 +20,7 @@ public class Logs {
     private String event;
     private String username;
     private String desc;
+    private String explanation;
     private Timestamp timestamp;
 
     private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -43,6 +44,19 @@ public class Logs {
         this.event = event;
         this.username = username;
         this.desc = desc;
+        try {
+            this.timestamp = new Timestamp(dateformat.parse(timestamp).getTime());
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public Logs(int id, String event, String username, String desc, String explanation, String timestamp){
+        this.id = id;
+        this.event = event;
+        this.username = username;
+        this.desc = desc;
+        this.explanation = explanation;
         try {
             this.timestamp = new Timestamp(dateformat.parse(timestamp).getTime());
         } catch (ParseException ex) {

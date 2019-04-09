@@ -39,13 +39,31 @@ public class MgmtLogs extends javax.swing.JPanel {
         }
         
 //      LOAD CONTENTS
-        ArrayList<Logs> logs = sqlite.getLogs();
-        for(int nCtr = 0; nCtr < logs.size(); nCtr++){
-            tableModel.addRow(new Object[]{
-                logs.get(nCtr).getEvent(), 
-                logs.get(nCtr).getUsername(), 
-                logs.get(nCtr).getDesc(), 
-                logs.get(nCtr).getTimestamp()});
+        if(sqlite.DEBUG_MODE == 0)
+        {   
+            ArrayList<Logs> logs = sqlite.getLogs();
+            for(int nCtr = 0; nCtr < logs.size(); nCtr++){
+                tableModel.addRow(new Object[]{
+                    logs.get(nCtr).getEvent(), 
+                    logs.get(nCtr).getUsername(), 
+                    logs.get(nCtr).getDesc(), 
+                    logs.get(nCtr).getTimestamp()});
+            }
+        }
+        
+        else if(sqlite.DEBUG_MODE == 1)
+        {   
+            System.out.println("----------ENABLED LOGS for loop----------");
+            ArrayList<Logs> enabledLogs = sqlite.getEnabledLogs();
+            for(int nCtr = 0; nCtr < enabledLogs.size(); nCtr++){
+                System.out.println("for loop before: " + nCtr);
+                tableModel.addRow(new Object[]{
+                    enabledLogs.get(nCtr).getEvent(), 
+                    enabledLogs.get(nCtr).getUsername(), 
+                    enabledLogs.get(nCtr).getDesc(), 
+                    enabledLogs.get(nCtr).getTimestamp()});
+                System.out.println("for loop after: " + nCtr);
+            }
         }
         
         switch(sqlite.role)
@@ -149,16 +167,27 @@ public class MgmtLogs extends javax.swing.JPanel {
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
         sqlite.dropLogsTable();
         sqlite.createLogsTable();
+        sqlite.createLogsEnabledTable();
         sqlite.addLogs("NOTICE", sqlite.username, "Successfully deleted logs table", new Timestamp(new Date().getTime()).toString());
 //        ErrorBox("Successfully deleted.", "Delete successful");
         init();
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
+        //System.out.println("ENTERED DEBUG MODE");
         if(sqlite.DEBUG_MODE == 1)
+        {   
+            System.out.println("DEBUG MODE: " + sqlite.DEBUG_MODE + "to 0");
             sqlite.DEBUG_MODE = 0;
+            init();
+            
+        }
         else
+        {
+            System.out.println("DEBUG MODE: " + sqlite.DEBUG_MODE + "to 1");
             sqlite.DEBUG_MODE = 1;
+            init();
+        }
     }//GEN-LAST:event_debugBtnActionPerformed
 
 

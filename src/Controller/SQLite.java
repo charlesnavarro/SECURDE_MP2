@@ -60,6 +60,22 @@ public class SQLite {
             System.out.println("Table logs in database.db created.");
         } catch (Exception ex) {}
     }
+    
+    public void createLogsEnabledTable(){
+        String sql = "CREATE TABLE IF NOT EXISTS enabledLogs (\n"
+            + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+            + " event TEXT NOT NULL,\n"
+            + " username TEXT NOT NULL,\n"
+            + " descEnabled TEXT NOT NULL,\n"
+            + " timestamp TEXT NOT NULL\n"
+            + ");";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table enabledLogs in database.db created.");
+        } catch (Exception ex) {}
+    }
      
     public void createProductTable() {
         String sql = "CREATE TABLE IF NOT EXISTS product (\n"
@@ -150,6 +166,17 @@ public class SQLite {
         } catch (Exception ex) {}
     }
     
+    public void addEnabledLogs(String event, String username, String desc, String explanation, String timestamp) {
+       // String descEnabled = desc + ": " + explanation;
+        desc = desc + ": " + explanation;
+        String sql = "INSERT INTO enabledLogs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
+        System.out.println("ENTERED ENABLED LOGS: " + desc);
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+        } catch (Exception ex) {}
+    }
+    
     public void addProduct(String name, int stock, double price) {
         String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
         
@@ -196,20 +223,47 @@ public class SQLite {
     }
     
     public ArrayList<Logs> getLogs(){
+        //if debugMode == 0: disabled
+        //if debugMode == 1: enabled    
+        
         String sql = "SELECT id, event, username, desc, timestamp FROM logs";
         ArrayList<Logs> logs = new ArrayList<Logs>();
-        
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
             
-            while (rs.next()) {
-                logs.add(new Logs(rs.getInt("id"),
-                                   rs.getString("event"),
-                                   rs.getString("username"),
-                                   rs.getString("desc"),
-                                   rs.getString("timestamp")));
-            }
+                while (rs.next()) 
+                {
+                    logs.add(new Logs(rs.getInt("id"),
+                                       rs.getString("event"),
+                                       rs.getString("username"),
+                                       rs.getString("desc"),
+                                       rs.getString("timestamp")));
+                }
+            
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return logs;
+        
+    }
+    
+    public ArrayList<Logs> getEnabledLogs(){
+        
+        String sql = "SELECT id, event, username, descEnabled, timestamp FROM enabledLogs";
+        ArrayList<Logs> logs = new ArrayList<Logs>();
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)){
+                while(rs.next())
+                {
+                    logs.add(new Logs(rs.getInt("id"),
+                                       rs.getString("event"),
+                                       rs.getString("username"),
+                                       rs.getString("descEnabled"),
+                                       rs.getString("timestamp")));
+                }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
