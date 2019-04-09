@@ -242,9 +242,11 @@ public class MgmtProduct extends javax.swing.JPanel {
                 }
                 else if(Integer.parseInt(stockFld.getText()) > Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString())){
                     ErrorBox("There is not enough stock", "Item out of stock");
+                    sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully purchased " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
                 }
                 else if(Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString()) == 0){
                     ErrorBox("You cannot purchase this item anymore", "Item out of stock");
+                    sqlite.addLogs("NOTICE", sqlite.username, "Unuccessfully purchased " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
                 }
             }
         }
