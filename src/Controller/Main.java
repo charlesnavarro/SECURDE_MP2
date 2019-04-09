@@ -32,6 +32,7 @@ public class Main {
         sqlite.dropLogsTable();
         sqlite.dropProductTable();
         sqlite.dropUserTable();
+        sqlite.dropEnabledLogsTable();
         
         // Create users table if not exist
         sqlite.createHistoryTable();

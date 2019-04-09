@@ -148,6 +148,16 @@ public class SQLite {
         } catch (Exception ex) {}
     }
     
+    public void dropEnabledLogsTable() {
+        String sql = "DROP TABLE IF EXISTS enabledLogs;";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table users in database.db dropped.");
+        } catch (Exception ex) {}
+    }
+    
     public void addHistory(String username, String name, int stock, String timestamp) {
         String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES('" + username + "','" + name + "','" + stock + "','" + timestamp + "')";
         
@@ -169,8 +179,8 @@ public class SQLite {
     public void addEnabledLogs(String event, String username, String desc, String explanation, String timestamp) {
        // String descEnabled = desc + ": " + explanation;
         desc = desc + ": " + explanation;
-        String sql = "INSERT INTO enabledLogs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
-        System.out.println("ENTERED ENABLED LOGS: " + desc);
+       String sql = "INSERT INTO enabledLogs(event,username,descEnabled,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
+        
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
