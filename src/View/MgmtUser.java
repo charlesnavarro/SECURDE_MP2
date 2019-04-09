@@ -396,31 +396,38 @@ public class MgmtUser extends javax.swing.JPanel {
                     else if (!password.getText().equals(confpass.getText()) && (password.getText().equals("") || confpass.getText().equals(""))) 
                     {
                         //if username is unique && passwords DON'T match && either pass or cPassword is blank 
-                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
-                        ErrorBox("Passwords do not match AND password field is empty", "Invalid Password");
+                        sqlite.addLogs("NOTICE", sqlite.username, "Failed password changed of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addEnabledLogs("NOTICE", sqlite.username, "Failed password change", "Empty password field", new Timestamp(new Date().getTime()).toString());
+                        ErrorBox("Password field is empty", "Invalid Password");
                     }
                     else if(!password.getText().equals(confpass.getText()) && (!password.getText().equals("")) && (!confpass.getText().equals("")))
                     {
                         //if username is unique && passwords DON'T match && password fields are NOT empty
-                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addLogs("NOTICE", sqlite.username, "Failed password change of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addEnabledLogs("NOTICE", sqlite.username, "Failed password change", "Passwords do not match", new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Passwords do not match! Try again.", "Invalid Password");
                     }
                     else if((password.getText().equals("") || confpass.getText().equals("")))
                     {
                         //if username is unique && passwords match && password fields are BLANK
-                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addLogs("NOTICE", sqlite.username, "Failed password change of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addEnabledLogs("NOTICE", sqlite.username, "Failed password change", "Empty password field", new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Password field is empty.", "Invalid Password");
                     }
                     else if(password.getText().contains(" ") || confpass.getText().contains(" ")){
-                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
-                        ErrorBox("You can't use a space for your password", "Invalid Password");
+                        sqlite.addLogs("NOTICE", sqlite.username, "Failed password change of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addEnabledLogs("NOTICE", sqlite.username, "Failed password change", "Contains space", new Timestamp(new Date().getTime()).toString());
+                        ErrorBox("Cannot contain a space", "Invalid Password");
                     }
                     else if(!(Password_Validation(password.getText()))){
-                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addLogs("NOTICE", sqlite.username, "Failed password change " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addEnabledLogs("NOTICE", sqlite.username, "Failed password change", "Weak password", new Timestamp(new Date().getTime()).toString());
                         ErrorBox("Password should contain special characters, numbers, upper and lowercase letters and be 8-32 characters long", "Invalid Password");
                     }
                     else if(!sqlite.username.equals(tableModel.getValueAt(table.getSelectedRow(), 0))){
-                        sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully changed password of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        sqlite.addEnabledLogs("NOTICE", sqlite.username, "Failed password change", "Can only change own password", new Timestamp(new Date().getTime()).toString());
+                        sqlite.addLogs("NOTICE", sqlite.username, "Failed password change of " + "" + tableModel.getValueAt(table.getSelectedRow(), 0).toString(),  new Timestamp(new Date().getTime()).toString());
+                        
                         ErrorBox("You can only change your own password.", "Error");
                     }
             }
