@@ -259,6 +259,7 @@ public class MgmtProduct extends javax.swing.JPanel {
         JTextField stockFld = new JTextField();
         JTextField priceFld = new JTextField();
 
+        boolean exist = true;
         designer(nameFld, "PRODUCT NAME");
         designer(stockFld, "PRODUCT STOCK");
         designer(priceFld, "PRODUCT PRICE");
@@ -273,16 +274,34 @@ public class MgmtProduct extends javax.swing.JPanel {
             System.out.println(nameFld.getText());
             System.out.println(stockFld.getText());
             System.out.println(priceFld.getText());
-            if(nameFld.getText().equals("") || stockFld.getText().equals("") || priceFld.getText().equals("")){
+            
+            ArrayList<Product> p = sqlite.getProduct();
+            for(int i = 0; i < p.size(); i++){
+                if(!nameFld.getText().equalsIgnoreCase(p.get(i).getName())){
+                    exist = true;
+                }
+                else
+                    exist = false;
+            }
+            if(exist){
+                if(nameFld.getText().equals("") || stockFld.getText().equals("") || priceFld.getText().equals("")){
                 sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully added product", new Timestamp(new Date().getTime()).toString());
                 sqlite.addEnabledLogs("NOTICE", sqlite.username, "Unsuccessfully added product", "Empty text field", new Timestamp(new Date().getTime()).toString());
                 ErrorBox("Must not leave text field empty", "Missing input");
+                }
+                else{
+                    sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
+                    sqlite.addLogs("NOTICE", sqlite.username, "Successfully added " + nameFld.getText(), new Timestamp(new Date().getTime()).toString());
+                    init();
+                }
             }
             else{
-                sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
-                sqlite.addLogs("NOTICE", sqlite.username, "Successfully added " + nameFld.getText(), new Timestamp(new Date().getTime()).toString());
-                init();
+                sqlite.addLogs("NOTICE", sqlite.username, "Unsuccessfully added product", new Timestamp(new Date().getTime()).toString());
+                sqlite.addEnabledLogs("NOTICE", sqlite.username, "Unsuccessfully added product", "Item already exists", new Timestamp(new Date().getTime()).toString());
+                ErrorBox("Item already exists", "Error");
             }
+                
+            
             
 //            ErrorBox("Successfully added.", "Add successful");
         }
