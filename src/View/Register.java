@@ -7,6 +7,7 @@ import static java.lang.Character.isUpperCase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,8 +177,7 @@ public boolean Password_Validation(String s) {
         String cPassword = confpass.getText();
         ArrayList<User> users = frame.main.sqlite.getUsers();
         int ctr = 0;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");  
-        Date date = new Date();  
+        
 
         System.out.println("users array size: " + users.size());
         
@@ -210,12 +210,8 @@ public boolean Password_Validation(String s) {
             frame.loginNav();
             jLabel2.setText("");
             jLabel3.setText("");
-            String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username.getText().toString() + "','" + "User creation successful" + "','" + formatter.format(date) + "')";
-        
-            try (Connection conn = DriverManager.getConnection(driverURL);
-                Statement stmt = conn.createStatement()){
-                stmt.execute(sql);
-            } catch (Exception ex) {}
+            frame.main.sqlite.addLogs("NOTICE", username.getText().toString(), "User creation successful", new Timestamp(new Date().getTime()).toString());
+           
         }
         else if (ctr==0 && !pass.equals(cPassword) && (pass.equals("") || cPassword.equals(""))) 
         {

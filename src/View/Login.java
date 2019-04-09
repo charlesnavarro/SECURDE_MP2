@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.Timer;
@@ -150,50 +149,27 @@ public class Login extends javax.swing.JPanel {
                             frame.mainNav();
                             nCtr = users.size() + 1;
                             attempts = 0;
-//                            sqlite.addLogs("NOTICE", username, "Successful login", new Timestamp(new Date().getTime()).toString());
-                            String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Successful login" + "','" + new Timestamp(new Date().getTime()).toString() + "')";
-        
-                            try (Connection conn = DriverManager.getConnection(driverURL);
-                                Statement stmt = conn.createStatement()){
-                                stmt.execute(sql);
-                            } catch (Exception ex) {}
-
+                            System.out.println(username + new Timestamp(new Date().getTime()).toString());
+                            frame.main.sqlite.addLogs("NOTICE", username, "Successful login", new Timestamp(new Date().getTime()).toString());
+                            
                             }
                         else if(users.get(nCtr).getRole() == 1){
                             nCtr = users.size() +1;
                             jLabel3.setText("Login failed: Your account has been disabled");
-                            sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
-//                            String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Unsuccessful login" + "','" + formatter.format(date) + "')";
-//        
-//                            try (Connection conn = DriverManager.getConnection(driverURL);
-//                                Statement stmt = conn.createStatement()){
-//                                stmt.execute(sql);
-//                            } catch (Exception ex) {}
-                        }
+                            frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
+                           }
                     }
                     else if(users.get(nCtr).getLocked() == 1){
                         nCtr = users.size() +1;
                         jLabel3.setText("Login failed: You have been locked out of your account");
-                        sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
-//                        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Unsuccessful login" + "','" + formatter.format(date) + "')";
-//        
-//                            try (Connection conn = DriverManager.getConnection(driverURL);
-//                                Statement stmt = conn.createStatement()){
-//                                stmt.execute(sql);
-//                            } catch (Exception ex) {}
+                        frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
                     }
                 }
                 else {
                     jLabel3.setText("Login failed: Invalid username or password");
                     nCtr = users.size() + 1;
                         attempts++;
-                    sqlite.addLogs("NOTICE", "admin", "User creation successful", new Timestamp(new Date().getTime()).toString());
-//                    String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + "NOTICE" + "','" + username + "','" + "Unsuccessful login" + "','" + formatter.format(date) + "')";
-//        
-//                            try (Connection conn = DriverManager.getConnection(driverURL);
-//                                Statement stmt = conn.createStatement()){
-//                                stmt.execute(sql);
-//                            } catch (Exception ex) {}
+                    frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
                 }
             }
             else if (!username.equals(users.get(nCtr).getUsername())) {
