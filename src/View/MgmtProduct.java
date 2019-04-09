@@ -237,6 +237,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                     quantity = quantity - Integer.parseInt(stockFld.getText());
                     sqlite.purchaseProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), quantity);
 //                    ErrorBox("Successfully purchased.", "Purchase successful");
+                    sqlite.addLogs("NOTICE", sqlite.username, "Successfully purchased " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
                     init();
                 }
                 else if(Integer.parseInt(stockFld.getText()) > Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString())){
@@ -269,8 +270,10 @@ public class MgmtProduct extends javax.swing.JPanel {
             System.out.println(stockFld.getText());
             System.out.println(priceFld.getText());
             sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
-//            ErrorBox("Successfully added.", "Add successful");
+            sqlite.addLogs("NOTICE", sqlite.username, "Successfully added " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
             init();
+            
+//            ErrorBox("Successfully added.", "Add successful");
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
@@ -297,6 +300,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 sqlite.editProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Float.parseFloat(priceFld.getText()));
 //                ErrorBox("Successfully updated.", "Update successful");
                 System.out.println(result);
+                sqlite.addLogs("NOTICE", sqlite.username, "Successfully edited " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
                 init();
             }
         }
@@ -310,6 +314,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
 //                ErrorBox("Successfully deleted.", "delete successful");
+                sqlite.addLogs("NOTICE", sqlite.username, "Successfully deleted " + tableModel.getValueAt(table.getSelectedRow(), 0).toString(), new Timestamp(new Date().getTime()).toString());
                 init();
             }
         }
