@@ -112,7 +112,7 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         
+        int count = 0;
         Timer timer = new Timer(delay, new ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
         jButton2.setEnabled(true);
@@ -177,6 +177,11 @@ public class Login extends javax.swing.JPanel {
             }
             else if (!username.equals(users.get(nCtr).getUsername())) {
                 jLabel3.setText("Login failed: Invalid username or password");
+                count++;
+                if(count == users.size()){
+                    frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
+                    frame.main.sqlite.addEnabledLogs("NOTICE", username, "Unsuccessful login", "Invalid username", new Timestamp(new Date().getTime()).toString());
+                }
             }
             if(attempts == 5){
                 jLabel3.setText("Attempts have already exceeded. You have to wait " + delay/1000 + " seconds");
