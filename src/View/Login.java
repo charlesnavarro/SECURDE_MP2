@@ -157,12 +157,14 @@ public class Login extends javax.swing.JPanel {
                             nCtr = users.size() +1;
                             jLabel3.setText("Login failed: Your account has been disabled");
                             frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
+                            frame.main.sqlite.addEnabledLogs("NOTICE", username, "Unsuccessful login", "Account disabled", new Timestamp(new Date().getTime()).toString());
                            }
                     }
                     else if(users.get(nCtr).getLocked() == 1){
                         nCtr = users.size() +1;
                         jLabel3.setText("Login failed: You have been locked out of your account");
                         frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
+                        frame.main.sqlite.addEnabledLogs("NOTICE", username, "Unsuccessful login", "Account locked", new Timestamp(new Date().getTime()).toString());
                     }
                 }
                 else {
@@ -170,6 +172,7 @@ public class Login extends javax.swing.JPanel {
                     nCtr = users.size() + 1;
                         attempts++;
                     frame.main.sqlite.addLogs("NOTICE", username, "Unsuccessful login", new Timestamp(new Date().getTime()).toString());
+                    frame.main.sqlite.addEnabledLogs("NOTICE", username, "Unsuccessful login", "Wrong password", new Timestamp(new Date().getTime()).toString());
                 }
             }
             else if (!username.equals(users.get(nCtr).getUsername())) {
